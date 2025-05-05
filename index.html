@@ -43,7 +43,7 @@
             padding-bottom: 0.5rem;
         }
         
-        .form-title::after {
+        .form-title:after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -172,8 +172,7 @@
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                             <input type="text" class="form-control" id="firstName" name="firstName"
-                                pattern="[A-Za-z\u00C0-\u017F\s'-]+" 
-                                title="Only letters, spaces, hyphens, and apostrophes are allowed" required>
+                            pattern="[A-Za-z\u00C0-\u017F]+" title="Only letters, spaces, hyphens, and apostrophes are allowed" required>
                         </div>
                         <div class="invalid-feedback">
                             Please provide a valid first name (only letters and basic punctuation).
@@ -184,7 +183,7 @@
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                             <input type="text" class="form-control" id="lastName" name="lastName"
-                                pattern="[A-Za-z\u00C0-\u017F\s'-]+"
+                            pattern="[A-Za-z\u00C0-\u017F]+"
                                 title="Only letters, spaces, hyphens, and apostrophes are allowed" required>
                         </div>
                         <div class="invalid-feedback">
@@ -211,7 +210,8 @@
                         <input type="date" class="form-control" id="dob" name="dob" required>
                     </div>
                     <div class="invalid-feedback" id="dobFeedback">
-
+                        Please provide a valid date of birth (you must be at least 13 years old and not older than 150
+                        years).
                     </div>
                 </div>
 
@@ -221,7 +221,8 @@
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                         <input type="password" class="form-control" id="password" name="password"
                             pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$"
-
+                            title="Must contain at least 8 characters, including uppercase, lowercase, number, and special character"
+                            required>
                     </div>
                     <!-- Bu div feedback için kullanılacak -->
                     <div class="invalid-feedback" id="passwordFeedback">
@@ -244,7 +245,7 @@
                         <span class="input-group-text"><i class="fas fa-lock"></i></span>
                         <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
                     </div>
-                    <div class="error-message text-danger mt-1" id="passwordMismatch" style="display:none;">
+                    <div class="error-message text-danger mt-1" id="passwordMismatch">
                         <i class="fas fa-exclamation-circle me-1"></i>Passwords do not match.
                     </div>
                     <div class="invalid-feedback">
@@ -275,182 +276,13 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-<<<<<<< Updated upstream
 
     </script>
     
 </body>
 </html>
+
 
 =======
-        // Validate date of birth with EP and BVA
-        document.getElementById('dob').addEventListener('change', function () {
-            const dobInput = this;
-            const dobFeedback = document.getElementById('dobFeedback');
-            const selectedDate = new Date(dobInput.value);
-            const today = new Date();
-    
-            // Calculate age
-            let age = today.getFullYear() - selectedDate.getFullYear();
-            const monthDiff = today.getMonth() - selectedDate.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < selectedDate.getDate())) {
-                age--;
-            }
-    
-            // Boundary Value Analysis (BVA) for age
-            const isBoundaryError = 
-                age === 12 || age === 13 ||  // Lower boundary (13 age limit)
-                age === 149 || age === 150;  // Upper boundary (150 age limit)
-    
-            // Validate age range
-            if (selectedDate > today) {
-                dobInput.setCustomValidity("Date of birth cannot be in the future (EP: Invalid Class)");
-                dobFeedback.textContent = "Date of birth cannot be in the future (EP: Invalid Class - Future date)";
-            } else if (age < 13) {
-                const method = age === 12 ? "BVA: Lower Boundary (12 < 13)" : "EP: Invalid Class";
-                dobInput.setCustomValidity(`You must be at least 13 years old (${method})`);
-                dobFeedback.textContent = `You must be at least 13 years old (${method})`;
-            } else if (age > 150) {
-                const method = age === 151 ? "BVA: Upper Boundary (151 > 150)" : "EP: Invalid Class";
-                dobInput.setCustomValidity(`Age cannot be more than 150 years (${method})`);
-                dobFeedback.textContent = `Age cannot be more than 150 years (${method})`;
-            } else {
-                dobInput.setCustomValidity("");
-            }
-        });
-    
-        // BU KISIM DEĞİŞTİ - Password validation with EP and BVA
-        document.getElementById('password').addEventListener('input', function() {
-            const password = this.value;
-            // Direkt id ile elementi buluyoruz, nextElementSibling kullanmadan
-            const feedback = document.getElementById('passwordFeedback'); 
-            
-            // Boundary Value Analysis (7, 8, 9 characters)
-            if (password.length === 7) {
-                this.setCustomValidity("Password must be at least 8 characters (BVA: 7 character boundary value)");
-                feedback.textContent = "Password must be at least 8 characters (BVA: 7 character boundary value)";
-            } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z])/.test(password)) {
-                this.setCustomValidity("Password must include uppercase, lowercase, number, and special character (EP: Invalid Class)");
-                feedback.textContent = "Password must include uppercase, lowercase, number, and special character (EP: Invalid Class)";
-            } else {
-                this.setCustomValidity("");
-            }
-        });
-    
-        // Validate password match
-        document.getElementById('confirmPassword').addEventListener('input', function () {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-            const mismatchMessage = document.getElementById('passwordMismatch');
-    
-            if (password !== confirmPassword) {
-                this.setCustomValidity("Passwords do not match (EP: Invalid Class)");
-                mismatchMessage.textContent = "Passwords do not match (EP: Invalid Class)";
-                mismatchMessage.style.display = 'block';
-            } else {
-                this.setCustomValidity("");
-                mismatchMessage.style.display = 'none';
-            }
-        });
-    
-        // Enhanced form submission with test method labels
-        document.getElementById('registrationForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            
-            // Check form validity
-            const isValid = this.checkValidity();
-            this.classList.add('was-validated');
-            
-            // Show test results section
-            document.getElementById('testResults').style.display = 'block';
-            
-            // Generate validation results
-            const validationResults = document.getElementById('validationResults');
-            validationResults.innerHTML = '';
-            
-            // Check each field with test method info
-            const fields = [
-                { id: 'firstName', name: 'First Name', icon: 'user', method: 'Equivalence Partitioning: Valid/Invalid Format' },
-                { id: 'lastName', name: 'Last Name', icon: 'user', method: 'Equivalence Partitioning: Valid/Invalid Format' },
-                { id: 'email', name: 'Email Address', icon: 'envelope', method: 'Equivalence Partitioning: Valid/Invalid Format' },
-                { id: 'dob', name: 'Date of Birth', icon: 'calendar-alt', method: 'Equivalence Partitioning + Boundary Value Analysis: Age Limits (13-150)' },
-                { id: 'password', name: 'Password', icon: 'lock', method: 'Equivalence Partitioning + Boundary Value Analysis: Length and Complexity' },
-                { id: 'confirmPassword', name: 'Confirm Password', icon: 'lock', method: 'Equivalence Partitioning: Matching Control' },
-                { id: 'terms', name: 'Terms and Conditions', icon: 'check-circle', type: 'checkbox', method: 'Equivalence Partitioning: Mandatory Consent' }
-            ];
-            
-            fields.forEach(field => {
-                const element = document.getElementById(field.id);
-                const isValidField = element.checkValidity();
-                
-                const resultDiv = document.createElement('div');
-                resultDiv.className = `test-result ${isValidField ? 'valid' : 'invalid'}`;
-                
-                const icon = document.createElement('i');
-                icon.className = `fas fa-${field.icon}`;
-                
-                const contentDiv = document.createElement('div');
-                contentDiv.className = 'test-result-content';
-                
-                const fieldName = document.createElement('strong');
-                fieldName.textContent = `${field.name} (${field.method})`;
-                
-                const status = document.createElement('span');
-                status.textContent = isValidField ? '✓ Test Passed' : '✗ Test Failed';
-                status.style.fontWeight = isValidField ? '500' : '600';
-                
-                contentDiv.appendChild(fieldName);
-                contentDiv.appendChild(status);
-                
-                if (!isValidField) {
-                    const reason = document.createElement('div');
-                    reason.style.marginTop = '0.5rem';
-                    reason.style.fontSize = '0.85rem';
-                    
-                    if (element.validationMessage) {
-                        reason.textContent = element.validationMessage;
-                    } else {
-                        reason.textContent = "This field is required";
-                    }
-                    
-                    contentDiv.appendChild(reason);
-                }
-                
-                resultDiv.appendChild(icon);
-                resultDiv.appendChild(contentDiv);
-                validationResults.appendChild(resultDiv);
-            });
-            
-            // Success message with test summary
-            if (isValid) {
-                const successDiv = document.createElement('div');
-                successDiv.className = 'test-result valid mt-3';
-                
-                const successIcon = document.createElement('i');
-                successIcon.className = 'fas fa-check-circle';
-                
-                const successContent = document.createElement('div');
-                successContent.className = 'test-result-content';
-                successContent.innerHTML = `
-                    <strong>Form Validation Complete</strong>
-                    <span>✓ All fields are valid</span>
-                    <div class="mt-2">
-                        <strong>Test Methods Applied:</strong>
-                        <ul class="mt-1">
-                            <li>Equivalence Partitioning (EP) for all fields</li>
-                            <li>Boundary Value Analysis (BVA) for Date of Birth and Password</li>
-                        </ul>
-                    </div>
-                `;
-                
-                successDiv.appendChild(successIcon);
-                successDiv.appendChild(successContent);
-                validationResults.appendChild(successDiv);
-            }
-        });
-    </script>
-    
-</body>
-</html>
->>>>>>> Stashed changes
+
+>>>>>>> main
