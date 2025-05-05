@@ -1,0 +1,24 @@
+{
+  "name": "unit-testing",
+  "version": "1.0.0",
+  "description": "This is an assignment work. The assignment is about unit testing for the login page in the Software Verification and Validation (SENG324) course, with contributions from our lecturer, Dr. Hilal Haznedar.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avanalperen/Unit-Testing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/avanalperen/Unit-Testing/issues"
+  },
+  "homepage": "https://github.com/avanalperen/Unit-Testing#readme",
+  "devDependencies": {
+    "cypress": "^14.3.2"
+  }
+}
