@@ -2,9 +2,9 @@ name: Cypress Check
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop , AlperenBranch , MesutBranch]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop , AlperenBranch , MesutBranch]
   workflow_dispatch:  # For manual triggering
 
 jobs:
