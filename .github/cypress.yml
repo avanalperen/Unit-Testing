@@ -1,0 +1,62 @@
+name: Cypress Check
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:  # For manual triggering
+
+jobs:
+  cypress-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      
+      # Check if cypress.json or cypress.config.js exists in the repository
+      - name: Check for Cypress config files
+        id: check-cypress-config
+        run: |
+          if [ -f cypress.json ] || [ -f cypress.config.js ] || [ -f cypress.config.ts ]; then
+            echo "Cypress configuration file found."
+            echo "config_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "No Cypress configuration file found."
+            echo "config_found=false" >> $GITHUB_OUTPUT
+          fi
+      
+      # Check if cypress directory exists and contains test files
+      - name: Check for Cypress test files
+        id: check-cypress-tests
+        run: |
+          if [ -d cypress ] && [ "$(find cypress -name "*.cy.js" -o -name "*.spec.js" -o -name "*.cy.ts" -o -name "*.spec.ts" | wc -l)" -gt 0 ]; then
+            echo "Cypress test files found."
+            echo "tests_found=true" >> $GITHUB_OUTPUT
+          else
+            echo "No Cypress test files found."
+            echo "tests_found=false" >> $GITHUB_OUTPUT
+          fi
+      
+      # Output the results as job summary
+      - name: Report Results
+        run: |
+          echo "# Cypress Check Results" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.check-cypress-config.outputs.config_found }}" == "true" ]; then
+            echo "✅ Cypress configuration file found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ No Cypress configuration file found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [ "${{ steps.check-cypress-tests.outputs.tests_found }}" == "true" ]; then
+            echo "✅ Cypress test files found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ No Cypress test files found" >> $GITHUB_STEP_SUMMARY
+          fi
